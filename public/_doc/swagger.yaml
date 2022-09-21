@@ -1,0 +1,379 @@
+swagger: '2.0'
+info:
+  description: Items & Files REST API ドキュメント
+  version: 0.0.1
+  title: Items & Files REST APIs
+host: localhost:8080
+basePath: /api/db
+tags:
+  - name: item
+    description: Item APIs
+  - name: file
+    description: File APIs
+schemes:
+  - http
+  - https
+paths:
+  /items:
+    get:
+      tags:
+        - item
+      summary: 全item取得
+      description: 全item取得
+      produces:
+        - application/json
+      parameters:
+        - name: limit
+          type: integer
+          in: query
+          description: 取得数上限値(default:0（上限無し）)
+        - name: start
+          type: integer
+          in: query
+          description: 取得開始オフセット値(default:0)
+      responses:
+        '200':
+          description: 成功
+        '400':
+          description: エラー
+    post:
+      tags:
+        - item
+      summary: バルクインサート
+      description: バルクインサート
+      produces:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/ItemsRequest'
+      responses:
+        '200':
+          description: 成功
+        '400':
+          description: エラー
+    put:
+      tags:
+        - item
+      summary: バルクアップデート
+      description: バルクアップデート
+      produces:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/ItemsRequest'
+      responses:
+        '200':
+          description: 成功
+        '400':
+          description: エラー
+    delete:
+      tags:
+        - item
+      summary: 全item削除
+      description: 全item削除
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: 成功
+        '400':
+          description: エラー
+  /items/{key}:
+    get:
+      tags:
+        - item
+      summary: 検索
+      description: 検索
+      produces:
+        - application/json
+      parameters:
+        - name: key
+          type: string
+          in: path
+          description: 検索キー
+          required: true
+        - name: limit
+          type: integer
+          in: query
+          description: 取得数上限値(default:0（上限無し）)
+        - name: start
+          type: integer
+          in: query
+          description: 取得開始オフセット値(default:0)
+      responses:
+        '200':
+          description: 成功
+        '400':
+          description: エラー
+  /item:
+    post:
+      tags:
+        - item
+      summary: item作成
+      description: item作成
+      produces:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/ItemRequest'
+      responses:
+        '200':
+          description: 成功
+        '400':
+          description: エラー
+  /item/{id}:
+    get:
+      tags:
+        - item
+      summary: item取得
+      description: item取得
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          type: string
+          in: path
+          description: id
+          required: true
+      responses:
+        '200':
+          description: 成功
+        '400':
+          description: エラー
+    put:
+      tags:
+        - item
+      summary: item更新
+      description: item更新
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          type: string
+          in: path
+          description: id
+          required: true
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/ItemRequest'
+      responses:
+        '200':
+          description: 成功
+        '400':
+          description: エラー
+    delete:
+      tags:
+        - item
+      summary: item削除
+      description: item削除
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          type: string
+          in: path
+          description: id
+          required: true
+      responses:
+        '200':
+          description: 成功
+        '400':
+          description: エラー
+  /file:
+    post:
+      tags:
+        - file
+      summary: ファイルアップロード
+      description: ファイルアップロード
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - in: formData
+          name: file
+          type: file
+          description: アップロードするファイル
+          required: true
+        - in: formData
+          name: item_id
+          type: string
+          description: アップロードするファイルが紐付く item の id
+          required: true
+      responses:
+        '200':
+          description: 成功
+        '400':
+          description: エラー
+  /file/{id}:
+    get:
+      tags:
+        - file
+      summary: file取得
+      description: file取得
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          type: string
+          in: path
+          description: id
+          required: true
+        - name: binary
+          type: string
+          in: query
+          description: バイナリ状態で GET するためのフラグ
+      responses:
+        '200':
+          description: 成功
+        '400':
+          description: エラー
+    put:
+      tags:
+        - file
+      summary: file更新
+      description: file更新
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          type: string
+          in: path
+          description: id
+          required: true
+        - in: formData
+          name: file
+          type: file
+          description: 新たにアップロードするファイル
+          required: true
+        - in: formData
+          name: item_id
+          type: string
+          description: アップロードするファイルが紐付く item の id
+          required: true
+      responses:
+        '200':
+          description: 成功
+        '400':
+          description: エラー
+    delete:
+      tags:
+        - file
+      summary: file削除
+      description: file削除
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          type: string
+          in: path
+          description: id
+          required: true
+      responses:
+        '200':
+          description: 成功
+        '400':
+          description: エラー
+  /file_by_item_id/{id}:
+    get:
+      tags:
+        - file
+      summary: file取得
+      description: file取得
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          type: string
+          in: path
+          description: id
+          required: true
+        - name: binary
+          type: string
+          in: query
+          description: バイナリ状態で GET するためのフラグ
+      responses:
+        '200':
+          description: 成功
+        '400':
+          description: エラー
+    put:
+      tags:
+        - file
+      summary: file更新
+      description: file更新
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          type: string
+          in: path
+          description: id
+          required: true
+        - in: formData
+          name: file
+          type: file
+          description: 新たにアップロードするファイル
+          required: true
+        - in: formData
+          name: item_id
+          type: string
+          description: アップロードするファイルが紐付く item の id
+          required: true
+      responses:
+        '200':
+          description: 成功
+        '400':
+          description: エラー
+    delete:
+      tags:
+        - file
+      summary: file削除
+      description: file削除
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          type: string
+          in: path
+          description: id
+          required: true
+      responses:
+        '200':
+          description: 成功
+        '400':
+          description: エラー
+definitions:
+  ItemRequest:
+    type: object
+    properties:
+      id:
+        type: string
+        description: id
+      name:
+        type: string
+        description: 名前
+      price:
+        type: integer
+        description: 価格
+  ItemsRequest:
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          type: string
+          description: id
+        name:
+          type: string
+          description: 名前
+        price:
+          type: integer
+          description: 価格

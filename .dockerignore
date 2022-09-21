@@ -1,0 +1,4 @@
+.git/
+node_modules/
+.memo.txt
+npm-debug.log
